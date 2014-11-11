@@ -3,6 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-       <bean id="jobBean" class="org.karpukhin.springlectures.test.TransferServiceImpl"/>
+       <bean id="transferService" class="springlectures.example1.CarTransferService"/>
+
+       <bean id="transferService2" class="springlectures.example1.BusTransferService"/>
 
 </beans>

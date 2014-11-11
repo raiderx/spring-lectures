@@ -1,21 +1,17 @@
-package org.karpukhin.springlectures.test;
+package springlectures.example1;
 
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 
-/**
- * @author Pavel Karpukhin
- * @since 09.11.14.
- */
-public class Test {
+public class XmlConfigExample {
 
     public static void main(String[] args) {
         DefaultListableBeanFactory factory = new DefaultListableBeanFactory();
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
 
-        reader.loadBeanDefinitions("classpath:beans.xml");
+        reader.loadBeanDefinitions("classpath:transfer-service.xml");
 
         TransferService service = factory.getBean(TransferService.class);
-        service.transfer("A", "B");
+        service.transfer("Kaluga", "Moscow");
     }
 }
