@@ -6,10 +6,13 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class XmlConfigWithAnnotatedBeansExample {
 
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("springlectures/example2/message-service.xml");
+        ApplicationContext context =
+                new ClassPathXmlApplicationContext(
+                        "springlectures/example2/message-service.xml");
 
-        MessageService service = context.getBean(MessageService.class);
+        MessageService service =
+                context.getBean(MessageService.class);
 
-        service.message("John", "Hello Spring Framework");
+        service.message("john@gmail.com", "Spring Framework is Great!");
     }
 }
