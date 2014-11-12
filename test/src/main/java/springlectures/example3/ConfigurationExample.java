@@ -1,5 +1,6 @@
 package springlectures.example3;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import springlectures.example1.TransferService;
 
@@ -10,11 +11,9 @@ import springlectures.example1.TransferService;
 public class ConfigurationExample {
 
     public static void main(String[] args) {
-        AnnotationConfigApplicationContext context =
-                new AnnotationConfigApplicationContext(AppConfig.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
         TransferService service = context.getBean(TransferService.class);
         service.transfer("A", "B");
     }
-
 }

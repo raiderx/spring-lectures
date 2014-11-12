@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="busDriver" class="springlectures.example1.BusDriver">
+        <constructor-arg name="name" value="Vasya Pupkin"/>
+    </bean>
+
+    <bean id="transferService" class="springlectures.example1.BusTransferService">
+        <property name="driver" ref="busDriver"/>
+    </bean>
+
+</beans>

@@ -10,5 +10,7 @@ public class BusTransferService implements TransferService {
 
     @Override
     public void transfer(String from, String to) {
+        System.out.println("Bus driver: " + driver.getName());
+        System.out.println("Transfer from " + from + " to " + to + " by bus");
     }
 }
