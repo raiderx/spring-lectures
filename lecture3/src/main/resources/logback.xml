@@ -9,7 +9,7 @@
 
     <logger name="lecture3" level="debug"/>
 
-    <root level="warn">
+    <root level="info">
         <appender-ref ref="CONSOLE" />
     </root>
 

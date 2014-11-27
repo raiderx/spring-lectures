@@ -5,43 +5,45 @@ import org.springframework.aop.framework.ProxyFactory;
 public class SecurityExample {
 
     public static void main(String[] args) {
-        SecurityManager securityManager = new SecurityManager();
+        SecurityManager manager = new SecurityManager();
 
-        MessageService service = getMessageService(securityManager);
+        MessageService service = getService(manager);
 
         try {
-            securityManager.login("john", "P@ssw0rd");
+            manager.login("john", "P@ssw0rd");
             service.send("mary", "Spring AOP works!");
         } catch (SecurityException e) {
-            System.err.println("Error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         } finally {
-            securityManager.logout();
+            manager.logout();
         }
 
         try {
-            securityManager.login("mary", "1q2w3e4r");
+            manager.login("mary", "1q2w3e4r");
             service.send("john", "Spring AOP works!");
         } catch (SecurityException e) {
-            System.err.println("Error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         } finally {
-            securityManager.logout();
+            manager.logout();
         }
 
         try {
             service.send("john", "Spring AOP works!");
         } catch (SecurityException e) {
-            System.err.println("Error: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
-    private static MessageService getMessageService(SecurityManager securityManager) {
+    private static MessageService getService(
+            SecurityManager manager) {
         MessageService target = new MessageService();
 
-        SecurityAdvice advice = new SecurityAdvice(securityManager);
+        SecurityAdvice advice = new SecurityAdvice(manager);
 
         ProxyFactory proxyFactory = new ProxyFactory();
         proxyFactory.setTarget(target);
         proxyFactory.addAdvice(advice);
+
         return (MessageService)proxyFactory.getProxy();
     }
 }

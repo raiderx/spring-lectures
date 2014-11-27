@@ -13,16 +13,23 @@ public class SecurityAdvice implements MethodBeforeAdvice {
     }
 
     @Override
-    public void before(Method method, Object[] objects, Object o) throws Throwable {
-        String username = securityManager.getUsername();
+    public void before(Method method, Object[] objects,
+                       Object o) throws Throwable {
+        String username = securityManager.getUser();
         if (username == null) {
-            throw new SecurityException("You must login before attempting to invoke method " + method.getName());
+            throw new SecurityException("You must login " +
+                    "before attempting to invoke method " +
+                    method.getName());
         }
         if ("john".equals(username)) {
-            System.out.println("Logged in user is " + username + ": OK!");
+            System.out.println("Logged in user is " +
+                    username + ": OK!");
         } else {
-            System.out.println("Logged in user is " + username + ": BAD!");
-            throw new SecurityException("User " + username + " is not allowed to invoke method " + method.getName());
+            System.out.println("Logged in user is " +
+                    username + ": BAD!");
+            throw new SecurityException("User " + username +
+                    " is not allowed to invoke method " +
+                    method.getName());
         }
     }
 }
