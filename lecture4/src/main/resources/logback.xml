@@ -7,7 +7,7 @@
         </encoder>
     </appender>
 
-    <logger name="lecture3" level="debug"/>
+    <logger name="lecture4" level="debug"/>
 
     <root level="info">
         <appender-ref ref="CONSOLE" />
