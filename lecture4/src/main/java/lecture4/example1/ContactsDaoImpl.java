@@ -11,7 +11,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.List;
 
 public class ContactsDaoImpl implements ContactsDao {
@@ -72,17 +71,10 @@ public class ContactsDaoImpl implements ContactsDao {
                 contact.getBirthDate(),
                 contact.getId()
         };
-        int[] types = new int[] {
-                Types.VARCHAR,
-                Types.VARCHAR,
-                Types.VARCHAR,
-                Types.DATE,
-                Types.INTEGER
-        };
         int rows = jdbcTemplate.update(
                 "UPDATE CONTACTS " +
                 "SET FIRST_NAME = ?, LAST_NAME = ?, EMAIL = ?, BIRTH_DATE = ? " +
-                "WHERE ID = ?", values, types);
+                "WHERE ID = ?", values);
         if (rows != 1) {
             throw new RuntimeException("Expected 1 but got " + rows);
         }

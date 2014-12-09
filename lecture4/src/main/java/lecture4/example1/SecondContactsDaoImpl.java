@@ -1,6 +1,5 @@
 package lecture4.example1;
 
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -36,8 +35,7 @@ public class SecondContactsDaoImpl implements ContactsDao {
 
     @Override
     public Contact getContactById(int id) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", id);
+        SqlParameterSource params = new MapSqlParameterSource("id", id);
         return jdbcTemplate.queryForObject(
                 "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, BIRTH_DATE " +
                 "FROM CONTACTS WHERE ID = :id", params, rowMapper);
@@ -46,7 +44,7 @@ public class SecondContactsDaoImpl implements ContactsDao {
     @Override
     public void create(Contact contact) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", contact.getId(), Types.INTEGER);
+        params.addValue("id", contact.getId());
         params.addValue("firstName", contact.getFirstName());
         params.addValue("lastName", contact.getLastName());
         params.addValue("email", contact.getEmail(), Types.VARCHAR);
@@ -65,7 +63,7 @@ public class SecondContactsDaoImpl implements ContactsDao {
     @Override
     public void update(Contact contact) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", contact.getId(), Types.INTEGER);
+        params.addValue("id", contact.getId());
         params.addValue("firstName", contact.getFirstName());
         params.addValue("lastName", contact.getLastName());
         params.addValue("email", contact.getEmail(), Types.VARCHAR);
