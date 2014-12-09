@@ -23,7 +23,7 @@ public class EmbeddedTestExample {
     @Test
     public void testDataAccess() {
         JdbcTemplate template = new JdbcTemplate(db);
-        template.query(...);
+        //template.query(...);
     }
 
     @After
