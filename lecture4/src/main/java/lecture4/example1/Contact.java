@@ -10,6 +10,8 @@ public class Contact {
     private String email;
     private Date birthDate;
 
+    // Геттеры и сеттеры
+
     public int getId() {
         return id;
     }
