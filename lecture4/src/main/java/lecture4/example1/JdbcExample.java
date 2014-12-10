@@ -2,34 +2,23 @@ package lecture4.example1;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class JdbcTemplateExample {
+public class JdbcExample {
 
     public static void main(String[] args) {
         ApplicationContext context =
                 new ClassPathXmlApplicationContext(
-                        "lecture4/example1/jdbc-template.xml");
-
-        JdbcTemplate jdbcTemplate = context.getBean(JdbcTemplate.class);
-
-        int count = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM CONTACTS", Integer.class);
-
-        String lastName = "Jobs";
-        String firstName = jdbcTemplate.queryForObject(
-                "SELECT FIRST_NAME FROM CONTACTS WHERE LAST_NAME = ?",
-                new Object[] { lastName }, String.class);
-
-        System.out.println(count);
-        System.out.println(firstName);
-        System.out.println();
+                        "lecture4/example1/jdbc.xml");
 
         ContactsDao contactsDao = context.getBean(ContactsDao.class);
+
+        int count = contactsDao.getContactsCount();
+        System.out.println(count);
+        System.out.println();
 
         List<Contact> contacts = contactsDao.getContacts();
         printContacts(contacts);

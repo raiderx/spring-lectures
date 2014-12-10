@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface ContactsDao {
 
+    int getContactsCount();
+
     List<Contact> getContacts();
 
     Contact getContactById(int id);

@@ -13,39 +13,50 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public class ContactsDaoImpl implements ContactsDao {
+public class ContactsDaoSpringImpl implements ContactsDao {
 
-    private final RowMapper<Contact> rowMapper = new ContactRowMapper();
+    private final RowMapper<Contact> rowMapper =
+            new ContactRowMapper();
 
     private JdbcTemplate jdbcTemplate;
 
-    public ContactsDaoImpl(JdbcTemplate jdbcTemplate) {
+    public ContactsDaoSpringImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
+    public int getContactsCount() {
+        final String sql = "SELECT COUNT(*) FROM CONTACTS";
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
+
+    @Override
     public List<Contact> getContacts() {
-        return jdbcTemplate.query(
-                "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, BIRTH_DATE " +
-                "FROM CONTACTS", rowMapper);
+        final String sql =
+                "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, " +
+                "BIRTH_DATE FROM CONTACTS";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public Contact getContactById(int id) {
-        return jdbcTemplate.queryForObject(
-                "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, BIRTH_DATE " +
-                        "FROM CONTACTS WHERE ID = ?", rowMapper, id);
+        final String sql =
+                "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, " +
+                "BIRTH_DATE FROM CONTACTS WHERE ID = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     @Override
     public void create(final Contact contact) {
+        final String sql =
+                "INSERT INTO CONTACTS (FIRST_NAME, LAST_NAME, " +
+                "EMAIL, BIRTH_DATE) VALUES (?, ?, ?, ?)";
         PreparedStatementCreator psc = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con)
                     throws SQLException {
                 PreparedStatement statement = con.prepareStatement(
-                        "INSERT INTO CONTACTS (FIRST_NAME, LAST_NAME, EMAIL, BIRTH_DATE) " +
-                                "VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+                        sql, Statement.RETURN_GENERATED_KEYS);
                 int i = 0;
                 statement.setString(++i, contact.getFirstName());
                 statement.setString(++i, contact.getLastName());
@@ -64,6 +75,9 @@ public class ContactsDaoImpl implements ContactsDao {
 
     @Override
     public void update(Contact contact) {
+        final String sql =
+                "UPDATE CONTACTS SET FIRST_NAME = ?, LAST_NAME = ?, " +
+                "EMAIL = ?, BIRTH_DATE = ? WHERE ID = ?";
         Object[] values = new Object[] {
                 contact.getFirstName(),
                 contact.getLastName(),
@@ -71,10 +85,7 @@ public class ContactsDaoImpl implements ContactsDao {
                 contact.getBirthDate(),
                 contact.getId()
         };
-        int rows = jdbcTemplate.update(
-                "UPDATE CONTACTS " +
-                "SET FIRST_NAME = ?, LAST_NAME = ?, EMAIL = ?, BIRTH_DATE = ? " +
-                "WHERE ID = ?", values);
+        int rows = jdbcTemplate.update(sql, values);
         if (rows != 1) {
             throw new RuntimeException("Expected 1 but got " + rows);
         }
@@ -82,9 +93,9 @@ public class ContactsDaoImpl implements ContactsDao {
 
     @Override
     public void removeById(int id) {
-        int rows = jdbcTemplate.update(
-                "DELETE FROM CONTACTS " +
-                "WHERE ID = ?", id);
+        final String sql =
+                "DELETE FROM CONTACTS WHERE ID = ?";
+        int rows = jdbcTemplate.update(sql, id);
         if (rows != 1) {
             throw new RuntimeException("Expected 1 but got " + rows);
         }

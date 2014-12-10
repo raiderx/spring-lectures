@@ -3,13 +3,10 @@ package lecture4.example1;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * @author Pavel Karpukhin
- * @since 10.12.14
- */
 public class NamedParameterJdbcTemplateExample {
 
     public static void main(String[] args) {
@@ -18,6 +15,11 @@ public class NamedParameterJdbcTemplateExample {
                         "lecture4/example1/jdbc-template-2.xml");
 
         ContactsDao contactsDao = context.getBean(ContactsDao.class);
+
+        int count = contactsDao.getContactsCount();
+        System.out.println(count);
+        System.out.println();
+
         List<Contact> contacts = contactsDao.getContacts();
         printContacts(contacts);
 
@@ -34,6 +36,18 @@ public class NamedParameterJdbcTemplateExample {
         contactsDao.create(contact);
         System.out.println(contact);
         System.out.println();
+
+        printContacts(contactsDao.getContacts());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(1973, 8, 8);
+
+        contact.setId(0);
+        contact.setFirstName("Mark");
+        contact.setLastName("Shuttleworth");
+        contact.setEmail("mark.shuttleworth@ubuntu.com");
+        contact.setBirthDate(calendar.getTime());
+        contactsDao.update(contact);
 
         printContacts(contactsDao.getContacts());
 

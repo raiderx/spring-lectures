@@ -16,44 +16,54 @@ import java.util.Map;
  * @author Pavel Karpukhin
  * @since 10.12.14
  */
-public class SecondContactsDaoImpl implements ContactsDao {
+public class ContactsDaoAnotherSpringImpl implements ContactsDao {
 
-    private final RowMapper<Contact> rowMapper = new ContactRowMapper();
+    private final RowMapper<Contact> rowMapper =
+            new ContactRowMapper();
 
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public SecondContactsDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+    public ContactsDaoAnotherSpringImpl(
+            NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
+    public int getContactsCount() {
+        final String sql = "SELECT COUNT(*) FROM CONTACTS";
+        Map<String, Object> params = new HashMap<>();
+        return jdbcTemplate.queryForObject(sql, params, Integer.class);
+    }
+
+    @Override
     public List<Contact> getContacts() {
-        return jdbcTemplate.query(
+        final String sql =
                 "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, BIRTH_DATE " +
-                "FROM CONTACTS", rowMapper);
+                "FROM CONTACTS";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     @Override
     public Contact getContactById(int id) {
-        SqlParameterSource params = new MapSqlParameterSource("id", id);
-        return jdbcTemplate.queryForObject(
+        final String sql =
                 "SELECT ID, FIRST_NAME, LAST_NAME, EMAIL, BIRTH_DATE " +
-                "FROM CONTACTS WHERE ID = :id", params, rowMapper);
+                "FROM CONTACTS WHERE ID = :id";
+        SqlParameterSource params = new MapSqlParameterSource("id", id);
+        return jdbcTemplate.queryForObject(sql, params, rowMapper);
     }
 
     @Override
     public void create(Contact contact) {
+        final String sql =
+                "INSERT INTO CONTACTS (FIRST_NAME, LAST_NAME, EMAIL, BIRTH_DATE)" +
+                "VALUES (:firstName, :lastName, :email, :birthDate)";
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", contact.getId());
         params.addValue("firstName", contact.getFirstName());
         params.addValue("lastName", contact.getLastName());
         params.addValue("email", contact.getEmail(), Types.VARCHAR);
         params.addValue("birthDate", contact.getBirthDate(), Types.DATE);
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        int rows = jdbcTemplate.update(
-                "INSERT INTO CONTACTS (FIRST_NAME, LAST_NAME, EMAIL, BIRTH_DATE)" +
-                "VALUES (:firstName, :lastName, :email, :birthDate)",
-                params, keyHolder);
+        int rows = jdbcTemplate.update(sql, params, keyHolder);
         if (rows != 1) {
             throw new RuntimeException("Expected 1 but got " + rows);
         }
@@ -62,17 +72,18 @@ public class SecondContactsDaoImpl implements ContactsDao {
 
     @Override
     public void update(Contact contact) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", contact.getId());
-        params.addValue("firstName", contact.getFirstName());
-        params.addValue("lastName", contact.getLastName());
-        params.addValue("email", contact.getEmail(), Types.VARCHAR);
-        params.addValue("birthDate", contact.getBirthDate(), Types.DATE);
-        int rows = jdbcTemplate.update(
+        final String sql =
                 "UPDATE CONTACTS " +
                 "SET FIRST_NAME = :firstName, LAST_NAME = :lastName, " +
-                    "EMAIL = :email, BIRTH_DATE = :birthDate " +
-                "WHERE ID = :id", params);
+                "EMAIL = :email, BIRTH_DATE = :birthDate " +
+                "WHERE ID = :id";
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", contact.getId());
+        params.put("firstName", contact.getFirstName());
+        params.put("lastName", contact.getLastName());
+        params.put("email", contact.getEmail());
+        params.put("birthDate", contact.getBirthDate());
+        int rows = jdbcTemplate.update(sql, params);
         if (rows != 1) {
             throw new RuntimeException("Expected 1 but got " + rows);
         }
@@ -80,10 +91,10 @@ public class SecondContactsDaoImpl implements ContactsDao {
 
     @Override
     public void removeById(int id) {
+        final String sql = "DELETE FROM CONTACTS WHERE ID = :id";
         Map<String, Object> params = new HashMap<>();
         params.put("id", id);
-        int rows = jdbcTemplate.update(
-                "DELETE FROM CONTACTS WHERE ID = :id", params);
+        int rows = jdbcTemplate.update(sql, params);
         if (rows != 1) {
             throw new RuntimeException("Expected 1 but got " + rows);
         }

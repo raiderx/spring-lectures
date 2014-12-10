@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xsi:schemaLocation="
     http://www.springframework.org/schema/beans
@@ -14,22 +13,14 @@
         <jdbc:script location="classpath:lecture4/example1/data.sql"/>
     </jdbc:embedded-database>
 
-    <!--<context:property-placeholder location="classpath:jdbc.properties"/>-->
-
-    <!--<bean id="dataSource"
-          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${jdbc.driver}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-    </bean>-->
-
-    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-        <property name="dataSource" ref="dataSource"/>
+    <bean id="jdbcTemplate"
+          class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="contactsDao" class="lecture4.example1.ContactsDaoImpl">
-        <constructor-arg ref="jdbcTemplate"/>
+    <bean id="contactsDao"
+          class="lecture4.example1.ContactsDaoSpringImpl">
+        <constructor-arg name="jdbcTemplate" ref="jdbcTemplate"/>
     </bean>
 
 </beans>
