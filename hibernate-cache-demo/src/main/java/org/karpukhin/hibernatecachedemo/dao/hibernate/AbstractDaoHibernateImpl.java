@@ -32,6 +32,7 @@ public class AbstractDaoHibernateImpl<T extends Entity> implements EntityDao<T> 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public T getById(int id) {
         return (T)getSession().load(type, id);
     }

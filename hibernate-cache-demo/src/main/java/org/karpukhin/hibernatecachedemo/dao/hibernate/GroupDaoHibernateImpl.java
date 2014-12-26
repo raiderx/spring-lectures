@@ -17,7 +17,8 @@ public class GroupDaoHibernateImpl extends AbstractDaoHibernateImpl<Group> imple
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Group> getAll() {
-        return getSession().getNamedQuery("query.group.get.all").list();
+        return getSession().getNamedQuery("query.group.get.all").setCacheable(true).list();
     }
 }
