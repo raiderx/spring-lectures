@@ -27,8 +27,8 @@ public class User extends Entity {
     private String firstName;
     @Column(name = "LAST_NAME", nullable = false, length = 50)
     private String lastName;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GROUP_ID")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "GROUP_ID", nullable = false)
     private Group group;
 
     public String getFirstName() {
